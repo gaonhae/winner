@@ -8,6 +8,14 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
 
+# --- Migration ---
+FROM deps AS migrator
+WORKDIR /app
+COPY prisma ./prisma
+COPY prisma.config.ts ./
+
+CMD ["npx", "prisma", "migrate", "deploy"]
+
 # --- Build ---
 FROM base AS builder
 WORKDIR /app

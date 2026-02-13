@@ -1,5 +1,33 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Run With Docker Compose
+
+Use `docker compose` (or `docker-compose` if you use v1) in this order:
+
+```bash
+# 1) Start MySQL first
+docker-compose -f docker-compose.prod.yml up -d mysql
+
+# 2) Apply Prisma migrations (one-shot)
+docker-compose -f docker-compose.prod.yml run --rm migrate
+
+# 3) Start app
+docker-compose -f docker-compose.prod.yml up -d app
+```
+
+Useful checks:
+
+```bash
+docker-compose -f docker-compose.prod.yml ps
+docker-compose -f docker-compose.prod.yml logs -f app
+```
+
+Stop everything:
+
+```bash
+docker-compose -f docker-compose.prod.yml down
+```
+
 ## Getting Started
 
 First, run the development server:

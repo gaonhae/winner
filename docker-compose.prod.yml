@@ -1,4 +1,15 @@
 services:
+  migrate:
+    build:
+      context: .
+      target: migrator
+    environment:
+      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+
   app:
     build:
       context: .
