@@ -12,6 +12,9 @@ const s3Client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
+  // Keep presigned PUT URLs browser-friendly (avoid optional checksum params).
+  requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
 });
 
 const BUCKET_NAME = process.env.S3_BUCKET_NAME!;
@@ -43,11 +46,10 @@ export async function generatePresignedUrl(
     Bucket: BUCKET_NAME,
     Key: key,
     ContentType: contentType,
-    ContentLength: fileSize,
   });
 
   const presignedUrl = await getSignedUrl(s3Client, command, {
-    expiresIn: 60,
+    expiresIn: 300,
   });
 
   const cdnUrl = `https://${CLOUDFRONT_DOMAIN}/${key}`;
