@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Deployment Guide
+
+For post-local deployment sequencing (EC2/RDS/IAM role/CloudFront verification), see:
+
+- `DEPLOYMENT_NEXT_STEPS.md`
+
 ## Run With Docker Compose
 
 Use `docker compose` (or `docker-compose` if you use v1) in this order:
@@ -26,6 +32,26 @@ Stop everything:
 
 ```bash
 docker-compose -f docker-compose.prod.yml down
+```
+
+## Run On EC2 With RDS
+
+Use `docker-compose.ec2.yml` when the database is managed by RDS (no local MySQL container).
+
+```bash
+# 0) Prepare env
+cp .env.ec2.example .env
+# then edit .env values
+
+# 1) Apply Prisma migrations to RDS
+docker-compose -f docker-compose.ec2.yml run --rm migrate
+
+# 2) Start app
+docker-compose -f docker-compose.ec2.yml up -d app
+
+# 3) Check status/logs
+docker-compose -f docker-compose.ec2.yml ps
+docker-compose -f docker-compose.ec2.yml logs -f app
 ```
 
 ## Getting Started

@@ -8,10 +8,9 @@ import crypto from "crypto";
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
+  // Use the AWS SDK default credential provider chain.
+  // - Local: environment variables or ~/.aws credentials
+  // - EC2: instance profile (IAM role)
   // Keep presigned PUT URLs browser-friendly (avoid optional checksum params).
   requestChecksumCalculation: "WHEN_REQUIRED",
   responseChecksumValidation: "WHEN_REQUIRED",
